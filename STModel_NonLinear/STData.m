@@ -1,11 +1,16 @@
+clc; clear;
 %% Vehicle data
 Ts= 0.001; Tsmall= 0.001;  m=2100; g=9.81;  
 l_f= 1.3; l_r= 1.5; l=l_f+l_r;
-Iz= 3900;Re= 0.3; Rw= 0.3; Iw= 4; 
+Iz= 3900;Re= 0.3; Rw= 0.3; Iw= 4; sigma= 0.5;
+
+%% Torque calculation
+
+Ww= m/4; Csf= 0.022; RR= m*Csf; 
 
 %% Initial conditions
 Px0=0; Py0=0; psi0=0; Vx0= 10; omega_f0= 29.1545; psi_dot0=0; Vy0=0;
-omega_r0= 29.1545;
+omega_r0= 29.1545; alpha_f0= 0; alpha_r0=0;
 
 %% Road condition
 
