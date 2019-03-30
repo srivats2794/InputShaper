@@ -4,6 +4,7 @@ Ts= 0.001; Tsmall= 0.001;  m=1573; g=9.81;
 l_f= 1.1; l_r= 1.58; l=l_f+l_r; C_alpha_f= 80000; C_alpha_r= 80000;
 Iz= 2873;Re= 0.3; Rw= 0.3; Iw= 4; sigma= 0.5;
 
+l_p= Iz/(m*l_r);
 %% Torque calculation
 
 Ww= m/4; Csf= 0.022; RR= m*Csf; 

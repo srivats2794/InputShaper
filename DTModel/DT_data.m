@@ -1,13 +1,16 @@
 clc; clear;
+
+%% Data
 Ts= 0.001; Tsmall= 0.001;  m=1830; g=9.81; h= 0.5; epsilon= 0.4; 
 l_f= 1.2110; l_r= 1.4590;
 Ixx= 602.1923; Iyy= 2.7370e+03; Izz= 3070; 
 K_phi= 178000; K_theta= 363540; D_phi= 16000; D_theta= 30960;
 w= 0.7700; road= 1; Rw= 0.3430; Iw= 4; 
 
-%Initial conditions
+%% Initial conditions
 Vx0= 10; omega0= 29.1545;
 
+%% Pacjeka params
 % Ashpalt Front
 mu_x_ash_f= 1.20 *0.85;
 mu_y_ash_f= 0.935 *0.85;
