@@ -69,7 +69,7 @@ Cy_wash_f= 1.07;
 Ex_wash_f= 0.313; 
 Ey_wash_f= -2.14;
 
-%wet ashphalt rear
+%Wet ashphalt rear
 mu_x_wash_r = 1.07;
 mu_y_wash_r= 0.911;
 Bx_wash_r= 11.5;
