@@ -10,8 +10,8 @@ l_p= Iz/(m*l_r);
 Ww= m/4; Csf= 0.022; RR= m*Csf; 
 
 %% Initial conditions
-Px0=0; Py0=0; psi0=0; Vx0= 10; omega_f0= 29.1545; psi_dot0=0; Vy0=0;
-omega_r0= 29.1545; alpha_f0= 0; alpha_r0=0;
+Px0=0; Py0=0; psi0=0; Vx0= 10; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
+omega_r0= Vx0/Rw; alpha_f0= 0; alpha_r0=0;
 
 %% Road condition
 
