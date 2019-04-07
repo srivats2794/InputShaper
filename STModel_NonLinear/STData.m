@@ -4,13 +4,13 @@ Ts= 0.001; Tsmall= 0.001;  m=1573; g=9.81;
 l_f= 1.1; l_r= 1.58; l=l_f+l_r; C_alpha_f= 80000; C_alpha_r= 80000;
 Iz= 2873;Re= 0.3; Rw= 0.3; Iw= 4; sigma= 0.5;
 
-l_p= Iz/(m*l_r);
+l_p= Iz/(m*l_r); load ("DLCTest.mat");
 %% Torque calculation
 
 Ww= m/4; Csf= 0.022; RR= m*Csf; 
 
 %% Initial conditions
-Px0=0; Py0=0; psi0=0; Vx0= 10; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
+Px0=0; Py0=0; psi0=0; Vx0= 16.67; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
 omega_r0= Vx0/Rw; alpha_f0= 0; alpha_r0=0;
 
 %% Road condition
