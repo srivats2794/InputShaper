@@ -12,7 +12,7 @@ C_alpha_f= 1830*0.50*0.165*57.29578; % in kg/rad, taking cornering stiffness per
 %of slip angle as 16-17 percent of tire load. 
 C_alpha_r= C_alpha_f; 
 %% Initial conditions
-Px0=0; Py0=0; psi0=0; Vx0= 6.94; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
+Px0=0; Py0=0; psi0=0; Vx0= 16.67; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
 omega_r0= Vx0/Rw; alpha_f0= 0; alpha_r0=0; omega0= Vx0/Rw; delta_r= 0;
 
 Velocity= sqrt((Vx0^2)+(Vy0^2));
@@ -24,7 +24,7 @@ pacjeka_params;
 %% Test
 test=1; %Toggle between 1 and 2 for Fishhook and DLC
 load("DLCTest.mat");
-load ("JTTest.mat");
+loa
 %% Rajamani Controller
-Ksbw=-0.5;
+Ksbw=1;
 %sim(RajamaniController);
