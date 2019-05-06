@@ -1,20 +1,20 @@
 %% PXPY
 hold on
-plot(PxCL_DLC60.Data(:,1), PyCL_DLC60.Data(:,1), 'blue', PxOL_DLC60.Data(:,1), PyOL_DLC60.Data(:,1), 'red');
-title ('DLC trajectory at 80 Kmph');
+plot(PxOG.Data(:,1), PyOG.Data(:,1), 'blue', Px_RC.Data(:,1), Py_RC.Data(:,1), 'red', Px_RCIS.Data(:,1), Py_RCIS.Data(:,1), 'magenta');
+title ('DLC trajectories at 80 Kmph');
 ylabel('Py (m)'); xlabel('Px (m)');
-legend('Controlled vehicle','Uncontrolled vehicle')
+legend('Original Input','Feedback Controller', 'Feedforward+Feedback')
 legend('Location','Northwest')
 hold off
 
 %% Yaw Rate
 t=0:0.001:12;
 hold on
-plot(t,yawrateCL_DLC60.Data(:,1),'blue', t, yawrateOL_DLC60.Data(:,1), 'red');
-title ('Yaw rate during DLC at 80 Kmph');
-ylabel('Yaw Rate (rad/s)'); xlabel('Time (s)');
-legend('Controlled vehicle','Uncontrolled vehicle')
-legend('Location','Northwest')
+plot(t,rad2deg(delta_og.Data(:,1)),'blue', t, rad2deg(delta_IS.Data(:,1)), 'green',  t, rad2deg(delta_RC.Data(:,1)), 'red', t, rad2deg(delta_RCIS.Data(:,1)), 'magenta');
+title ('The road-wheel steering angles for DLC at 80 Kmph');
+ylabel('delta (deg)'); xlabel('Time (s)');
+legend('Original Input','Feedforward only','Feedback controller','Feedforward+Feedback');
+legend('Location','Southwest')
 hold off
 
 %% Input shaper
