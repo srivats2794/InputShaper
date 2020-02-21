@@ -7,34 +7,36 @@ Ixx= 602.1923; Iyy= 2.7370e+03; Izz= 3070; Iz= Izz;
 K_phi= 178000; K_theta= 363540; D_phi= 16000; D_theta= 30960;
 w= 0.7700; Rw= 0.3; Re=Rw; Iw= 4; l_p= Iz/(m*l_r);
 Tf=0; Tr=0; %Driving/Braking torques
-C_alpha_f= 1830*0.50*0.165*57.29578; % in kg/rad, taking cornering stiffness per rad 
+C_alpha_f= 1830*0.45*0.165*57.29578; % in kg/rad, taking cornering stiffness per rad 
 %of slip angle as 16-17 percent of tire load. 
-C_alpha_r= C_alpha_f; 
+C_alpha_r= 1830*0.55*0.165*57.29578; 
 %% Initial conditions
-Px0=0; Py0=0; psi0=0; Vx0= 22.22; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
+Px0=0; Py0=0; psi0=0; Vx0= 22.23; omega_f0= Vx0/Rw; psi_dot0=0; Vy0=0;
 omega_r0= Vx0/Rw; alpha_f0= 0; alpha_r0=0; omega0= Vx0/Rw; delta_r= 0;
+Vx_global=22.23;
 
 Velocity= sqrt((Vx0^2)+(Vy0^2));
 
-load("DLCTest.mat");
+load("DLCTest_new2.mat");
 
 %% Road condition
 road=1; %Toggle between 1 to 4 for Dry ashphalt, wet ashphalt, snow and ice.
 pacjeka_params; 
 %% Input Shaper
-SWbuffer = 1e4; 
+SWbuffer = 1.2e4; 
 deltaSW_RAW_history = zeros(1,SWbuffer);
-TF = 12.003; %final time [s]
-samplePoints = TF/Ts+1; %number of sample points in simulation
+TF = 14.003; %final time [s]
+samplePoints = TF/Tsmall+1; %number of sample points in simulation
 tspanTotal = linspace(0,TF,samplePoints); %time span of simulation
-deltaSW_RAW_vec = (DLCTest(:,1))';
-CalphaF= 1830*0.50*0.165*57.29578; % in kg/rad, taking cornering stiffness per rad 
+deltaSW_RAW_vec = (DLCTest_new2(:,1))';
+CalphaF= 1830*0.45*0.165*57.29578; % in kg/rad, taking cornering stiffness per rad 
 %of slip angle as 16-17 percent of tire load. 
-CalphaR= CalphaF; 
+CalphaR= 1830*0.55*0.165*57.29578;
 t1=0;
-thetaSW_actual = [];
+thetaSW_actual_4i = [];
 a= l_f; b= l_r;
-dt=Ts;
+dt=Tsmall;
+tsim= 0:0.001:14.002;
 
 %Bicycle sim
 for i = 1:samplePoints-1
@@ -43,12 +45,12 @@ for i = 1:samplePoints-1
         %to steering wheel angle history
     %calculating natural frequency and damping ratio of bicycle model.
         %these parameters depend on 'Velocity', the current tangential CG velocity
-        a11 = -(CalphaR+CalphaF)/(m*Velocity); 
-        a12 = (CalphaR*b-CalphaF*a)/(m*Velocity^2)-1;
-        a21 = (CalphaR*b-CalphaF*a)/Iz;
-        a22 = -(CalphaR*b^2+CalphaF*a^2)/(Iz*Velocity);
-        b1 = CalphaF/(m*Velocity);
-        b2 = CalphaF*a/Iz;
+       a11 = -2*(CalphaR+CalphaF)/(m*Vx_global); 
+        a12 = -Vx_global+(2*(CalphaR*b-CalphaF*a)/(m*Vx_global));
+        a21 = (2*(CalphaR*b-CalphaF*a))/(Iz*Vx_global);
+        a22 = (-2*(CalphaR*(b^2)+CalphaF*(a^2)))/(Iz*Vx_global);
+        b1 = (2*CalphaF)/m;
+        b2 = (2*CalphaF*a)/Iz;
         om = sqrt(a11*a22-a12*a21); %natural frequency of bicycle model
         zeta = -(a11+a22)/(2*om); %damping ratio of bicycle model 
         omd = om*sqrt(1-zeta^2); %damped natural frequency of bicycle model
@@ -58,15 +60,19 @@ for i = 1:samplePoints-1
         K = exp(-zeta*pi/sqrt(1-zeta^2));
         t1 = 0; %first time delay
         t2 = Td/2; %second time delay
-        A1 = 1/(1+K); %amplification factor associated with first delay
-        A2 = K/(1+K); %amplification factor associated with second delay
+        t3=Td;
+        t4=1.5*Td;
+        A1 = 1/(1+(3*K)+(3*(K^2))+(K^3)); %amplification factor associated with first delay
+        A2 = (3*K)/(1+(3*K)+(3*(K^2))+(K^3)); %amplification factor associated with second delay
+        A3= (3*(K^2))/(1+(3*K)+(3*(K^2))+(K^3));
+        A4= (K^3)/(1+(3*K)+(3*(K^2))+(K^3));
         
         %the filtered steering wheel angle
-        deltaSW = A1*deltaSW_RAW_vec(i)+A2*deltaSW_RAW_history(end-round(t2/dt)); %here need time step duration 'dt' defined,
+        deltaSW = A1*deltaSW_RAW_vec(i)+A2*deltaSW_RAW_history(end-round(t2/dt))+A3*deltaSW_RAW_history(end-round(t3/dt))+A4*deltaSW_RAW_history(end-round(t4/dt)); %here need time step duration 'dt' defined,
         %so we know which index of steering wheel history to access
-        thetaSW_actual = [thetaSW_actual, deltaSW];
+        thetaSW_actual_4i = [thetaSW_actual_4i, deltaSW];
     
-    delta= (1/20)*thetaSW_actual(i);
+    delta= (1/20)*thetaSW_actual_4i(i);
     Fzf= (m*g*l_r)/l; Fzr= (m*g*l_f)/l;
     Vxf_unrotated= Vx0; Vxr_unrotated= Vx0; 
     Vyf_unrotated= Vy0+(l_f*psi_dot0); Vyr_unrotated= Vy0-(l_r*psi_dot0);
@@ -107,7 +113,7 @@ for i = 1:samplePoints-1
     Pxy= Rpsi*[Px0;Py0]; Px_global= Pxy(1); Py_global= Pxy(2);
      
     %Euler forward. Ts= 0.001
-    states= [psi_ddot; psi_dot0; Vx_dot; Vy_dot; omega_dot_f; omega_dot_r; alpha_dot_f; alpha_dot_r; Vx0; Vy0]*Ts+[psi_dot0;psi0;Vx0;Vy0;omega_f0; omega_r0;alpha_f0;alpha_r0; Px0; Py0];
+    states= [psi_ddot; psi_dot0; Vx_dot; Vy_dot; omega_dot_f; omega_dot_r; alpha_dot_f; alpha_dot_r; Vx0; Vy0]*Tsmall+[psi_dot0;psi0;Vx0;Vy0;omega_f0; omega_r0;alpha_f0;alpha_r0; Px0; Py0];
     
     %resetting initial values for next timesteps.
     psi_dot0= states(1); psi0= states(2); Vx0= states(3); Vy0= states(4); omega_f0= states(5);
@@ -116,5 +122,3 @@ for i = 1:samplePoints-1
     Pxy_next= Rpsi*[Px0;Py0]; Px_global= Pxy_next(1); Py_global= Pxy_next(2);
     Velocity= sqrt((Vx_global^2)+(Vy_global^2));
 end      
-
-

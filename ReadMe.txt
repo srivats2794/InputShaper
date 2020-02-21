@@ -1,3 +1,6 @@
+Please go through the research paper we published to understand the work. The file name is given by 'ReferenceShapingPaper'.
+
+
 FOLDER STRUCTURE
 ----------------
 
@@ -23,12 +26,12 @@ Reference: Berntorp, K., Olofsson, B., Lundahl, K., & Nielsen, L. (2014).
 Models and methodology for optimal trajectory generation in safety-critical road-vehicle manoeuvres. 
 Vehicle System Dynamics, 52(10), 1304–1332. https://doi.org/10.1080/00423114.2014.939094
 
-SbWControl_Rajamani
+SbWControl
 -------------------
 
-The steer by wire controller designed in Dr. Rajamani's book, chapter 8.
+The steer by wire controller used in the published paper
 
-Reference: Rajamani, Rajesh. Vehicle Dynamics and Control. Springer, 2012.
+You can run the files named aptly for all the variants mentioned in the paper. The plotDLC code plots the comparisons of the vehicle response. The simulink model 'InputShaper' runs only the feedforward control. The other simulink model runs feedforward+feedback control. 
 
 14DOF
 -----
